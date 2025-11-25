@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bienestar Corporativo - Reto Mental</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* --- ESTILOS V4.0 BIENESTAR --- */
+        :root {
+            /* Paleta de colores vibrante */
+            --bg-gradient: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%); /* Azul a Turquesa */
+            --wellness-gradient: linear-gradient(to right, #11998e, #38ef7d); /* Verde salud */
+            --card-bg: #ffffff;
+            --text-dark: #2d3436;
+            
+            /* Colores de Nivel */
+            --col-junior: #2ecc71;
+            --col-semi: #f39c12;
+            --col-senior: #e74c3c;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 450px;
+            background: var(--card-bg);
+            min-height: 620px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,147,233,0.3);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* --- NUEVO HEADER DE BIENESTAR --- */
+        .main-wellness-header {
+            background: var(--wellness-gradient);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 10px rgba(17, 153, 142, 0.3);
+            z-index: 10;
+        }
+
+        /* Header interno del juego */
+        header.game-header { padding: 15px 20px; text-align: center; border-bottom: 1px solid #f0f0f0; background: #fcfcfc; }
+        .progress-track { background: #e9ecef; height: 10px; border-radius: 5px; overflow: hidden; margin: 12px 0; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1); }
+        .progress-fill { height: 100%; background: var(--wellness-gradient); width: 0%; transition: width 0.5s ease-out; }
+        .stats { display: flex; justify-content: space-between; font-size: 0.9rem; color: #636e72; font-weight: 700; }
+
+        /* Área de Juego */
+        .game-area { flex: 1; padding: 20px; display: flex; flex-direction: column; justify-content: center; background: #f8faff; }
+        
+        /* Badges de Nivel Coloreados */
+        .level-badge { padding: 6px 15px; border-radius: 20px; font-size: 0.85rem; font-weight: 700; margin-bottom: 15px; display: inline-block; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .badge-junior { background: var(--col-junior); }
+        .badge-semi { background: var(--col-semi); }
+        .badge-senior { background: var(--col-senior); }
+
+        .question-text { font-size: 1.25rem; font-weight: 700; margin-bottom: 25px; color: var(--text-dark); text-align: center; line-height: 1.4; }
+
+        /* Botones más coloridos */
+        .options-grid { display: grid; gap: 12px; }
+        .btn-option {
+            background: #f0f7ff; /* Fondo ligeramente azulado */
+            border: 2px solid #dceeff;
+            padding: 16px; border-radius: 15px;
+            font-size: 1rem; cursor: pointer; text-align: left; font-family: inherit; font-weight: 600; color: #4a5568;
+            transition: all 0.2s;
+            position: relative; overflow: hidden;
+        }
+        .btn-option:hover { transform: translateY(-2px); border-color: #b3d7ff; box-shadow: 0 5px 15px rgba(183, 217, 255, 0.3); }
+        .btn-option:active { transform: scale(0.98); }
+        
+        .btn-option.correct { background: #00b894 !important; color: white !important; border-color: #00b894 !important; box-shadow: 0 5px 15px rgba(0, 184, 148, 0.4); }
+        .btn-option.wrong { background: #ff7675 !important; color: white !important; border-color: #ff7675 !important; animation: shake 0.3s; }
+
+        /* Pantallas */
+        .screen { display: none; padding: 30px; text-align: center; height: 100%; flex-direction: column; justify-content: center; align-items: center; box-sizing: border-box; }
+        .screen.active { display: flex; }
+        
+        .hero-emoji { font-size: 5rem; margin-bottom: 10px; display: block; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1)); }
+        .btn-main { background: var(--text-dark); color: white; border: none; padding: 16px 40px; border-radius: 50px; font-weight: 800; font-size: 1.1rem; cursor: pointer; margin-top: 12px; width: 100%; box-shadow: 0 10px 20px rgba(45, 52, 54, 0.2); transition: transform 0.2s; }
+        .btn-main:hover { transform: translateY(-2px); box-shadow: 0 15px 25px rgba(45, 52, 54, 0.3); }
+        .btn-secondary { background: white; color: var(--text-dark); border: 2px solid #eee; }
+
+        /* Tabla Leaderboard */
+        .leaderboard-table { width: 100%; margin-top: 25px; border-collapse: separate; border-spacing: 0 10px; }
+        .leaderboard-table th { text-align: left; color: #b2bec3; font-size: 0.8rem; font-weight: 700; padding-left: 10px; }
+        .leaderboard-table tr { background: #f8faff; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-radius: 10px; }
+        .leaderboard-table td { padding: 15px 10px; font-weight: 600; color: var(--text-dark); }
+        .leaderboard-table tr td:first-child { border-top-left-radius: 10px; border-bottom-left-radius: 10px; }
+        .leaderboard-table tr td:last-child { border-top-right-radius: 10px; border-bottom-right-radius: 10px; }
+        .rank { color: var(--col-semi); font-weight: 800; width: 40px; font-size: 1.2rem; }
+        .score-val { text-align: right; color: var(--col-junior); font-weight: 800; }
+        .input-name { padding: 15px; border: 2px solid #eee; border-radius: 12px; width: 80%; font-size: 1.1rem; margin: 20px 0; text-align: center; font-family: inherit; font-weight: 600; color: var(--text-dark); }
+
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <div class="main-wellness-header">
+            🌿 Bienestar & Agilidad Mental
+        </div>
+
+        <div id="start-screen" class="screen active">
+            <span class="hero-emoji">🧠⚡</span>
+            <h1 style="margin: 0; color: var(--text-dark); font-size: 1.8rem;">Pausa Activa Pro</h1>
+            <p style="color: #8898aa; font-weight: 600;">Ingeniería Edition v4.0</p>
+            
+            <div style="background: #f0f7ff; padding: 15px; border-radius: 15px; margin: 20px 0; text-align: left; width: 90%;">
+                <p style="margin: 5px 0; font-weight: 600; color: #4a5568;">🎯 <span style="color:var(--col-junior)">Junior</span> + <span style="color:var(--col-semi)">Semi</span> + <span style="color:var(--col-senior)">Senior</span></p>
+                <p style="margin: 5px 0; font-size: 0.9rem; color: #8898aa;">🔀 Orden aleatorio en cada intento</p>
+            </div>
+
+            <button class="btn-main" onclick="prepararJuego()">¡Activar Mente!</button>
+            <button class="btn-main btn-secondary" onclick="verRanking()">🏆 Salón de la Fama</button>
+        </div>
+
+        <div id="game-screen" style="display: none; flex-direction: column; height: 100%;">
+            <header class="game-header">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span id="level-title" style="font-weight: 800; color: var(--text-dark);">Nivel 1</span>
+                </div>
+                <div class="progress-track"><div class="progress-fill" id="progress-bar"></div></div>
+                <div class="stats">
+                    <span id="q-counter">1/30</span>
+                    <span id="score-counter" style="color: var(--col-junior)">0 pts</span>
+                </div>
+            </header>
+            <div class="game-area">
+                <div id="question-container" style="display: flex; flex-direction: column; align-items: center; width: 100%;"></div>
+            </div>
+        </div>
+
+        <div id="save-screen" class="screen">
+            <span class="hero-emoji">🎉</span>
+            <h1 style="color: var(--text-dark);">¡Excelente!</h1>
+            <p style="font-weight: 600; color: #8898aa;">Tu puntaje final es:</p>
+            <h2 id="final-score-display" style="font-size: 4rem; color:var(--col-junior); margin: 10px 0;"></h2>
+            <p>Guarda tu nombre en el dispositivo:</p>
+            <input type="text" id="player-name" class="input-name" placeholder="Tu Nombre o Apodo" maxlength="12">
+            <button class="btn-main" onclick="guardarPuntaje()">Guardar Récord</button>
+        </div>
+
+        <div id="leaderboard-screen" class="screen">
+            <span class="hero-emoji">🏆</span>
+            <h2 style="color: var(--text-dark); margin:0;">Top 5 Local</h2>
+            <p style="font-size:0.8rem; color:#999; margin-top: 5px;">(Puntajes en este dispositivo)</p>
+            <table class="leaderboard-table">
+                <thead><tr><th>#</th><th>Ingeniero/a</th><th style="text-align:right;">Pts</th></tr></thead>
+                <tbody id="leaderboard-body"></tbody>
+            </table>
+            <button class="btn-main" onclick="location.reload()" style="margin-top: 25px;">🔄 Nuevo Intento</button>
+        </div>
+
+    </div>
+
+    <script>
+        // --- BASE DE DATOS (Sin cambios) ---
+        const DB = [
+            { n: "Junior", p: "2, 4, 8, 16...", op: ["32", "20", "24", "18"], c: 0 },
+            { n: "Junior", p: "1kg de hierro vs 1kg de plumas", op: ["Igual", "Hierro", "Plumas", "Narnia"], c: 0 },
+            { n: "Junior", p: "🦁 👑", op: ["Rey León", "Selva", "Madagascar", "Zoo"], c: 0 },
+            { n: "Junior", p: "L, M, M, J, ...", op: ["V", "S", "D", "K"], c: 0 },
+            { n: "Junior", p: "10 + 10 x 0 = ?", op: ["10", "0", "20", "100"], c: 0 },
+            { n: "Junior", p: "Intruso: 🍎 🍎 🍅 🍎", op: ["El 3ro", "El 1ro", "El 2do", "El 4to"], c: 0 },
+            { n: "Junior", p: "¿Meses con 28 días?", op: ["12", "1", "6", "Ninguno"], c: 0 },
+            { n: "Junior", p: "Si me nombras, me rompes.", op: ["Silencio", "Cristal", "Hielo", "Promesa"], c: 0 },
+            { n: "Junior", p: "(2 / 2) + 2", op: ["3", "2", "4", "1"], c: 0 },
+            { n: "Junior", p: "🚗 + 🚗 = 10. ¿Coche?", op: ["5", "10", "2", "4"], c: 0 },
+            { n: "Semi", p: "Fibonacci: 1, 1, 2, 3, 5...", op: ["8", "7", "9", "6"], c: 0 },
+            { n: "Semi", p: "Hex #000000 es:", op: ["Negro", "Blanco", "Azul", "Nulo"], c: 0 },
+            { n: "Semi", p: "Padre de Juan tiene 4 hijos: Efe, Efi, Efo y...", op: ["Juan", "Efu", "Jefe", "Nadie"], c: 0 },
+            { n: "Semi", p: "🚢 🧊", op: ["Titanic", "Iceberg", "Polo", "Crucero"], c: 0 },
+            { n: "Semi", p: "20% de 50", op: ["10", "25", "5", "15"], c: 0 },
+            { n: "Semi", p: "121, 100, 81, 64...", op: ["49", "50", "36", "45"], c: 0 },
+            { n: "Semi", p: "Binario 101", op: ["5", "3", "4", "6"], c: 0 },
+            { n: "Semi", p: "Si ayer fuese mañana, hoy sería jueves.", op: ["Viernes", "Sábado", "Miércoles", "Domingo"], c: 0 },
+            { n: "Semi", p: "Tren eléctrico al norte, humo al...", op: ["Ninguno", "Sur", "Norte", "Este"], c: 0 },
+            { n: "Semi", p: "Ángulos triángulo suman", op: ["180", "360", "90", "270"], c: 0 },
+            { n: "Senior", p: "7+3=410, 9+6=315, 5+4=?", op: ["19", "120", "920", "91"], c: 0 },
+            { n: "Senior", p: "💊 🕶️ 🐇 💻", op: ["Matrix", "Alicia", "Hacker", "Farmacia"], c: 0 },
+            { n: "Senior", p: "3, 3, 5, 4, 4, 3, 5, 5, 4...", op: ["3", "4", "5", "6"], c: 0 },
+            { n: "Senior", p: "Ciudades sin casas, montañas sin árboles", op: ["Mapa", "Sueño", "Cine", "Dibujo"], c: 0 },
+            { n: "Senior", p: "8 + 8 = 4. ¿Contexto?", op: ["Reloj", "Binario", "Octal", "Decimal"], c: 0 },
+            { n: "Senior", p: "Raíz de 225", op: ["15", "12", "25", "13"], c: 0 },
+            { n: "Senior", p: "Interruptor de luz (3 bombillas)", op: ["Tocarla", "Verla", "Oirla", "Olerla"], c: 0 },
+            { n: "Senior", p: "Si 1=5, entonces 5=?", op: ["1", "25", "3125", "0"], c: 0 },
+            { n: "Senior", p: "Bate+Bola=1.10. Bate es 1.0 más que bola.", op: ["0.05", "0.10", "0.01", "0.15"], c: 0 },
+            { n: "Senior", p: "HTML es lenguaje de...", op: ["Marcado", "Programación", "Estilos", "Script"], c: 0 }
+        ];
+
+        let juegoActual = []; let index = 0; let score = 0; let bloqueado = false;
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function prepararJuego() {
+            let bJunior = DB.filter(x => x.n === "Junior");
+            let bSemi = DB.filter(x => x.n === "Semi");
+            let bSenior = DB.filter(x => x.n === "Senior");
+            shuffle(bJunior); shuffle(bSemi); shuffle(bSenior);
+            juegoActual = [...bJunior, ...bSemi, ...bSenior];
+            juegoActual.forEach(q => {
+                let respuestaTexto = q.op[q.c];
+                shuffle(q.op);
+                q.c = q.op.indexOf(respuestaTexto);
+            });
+            index = 0; score = 0;
+            mostrarPantalla('game-screen');
+            renderPregunta();
+        }
+
+        function renderPregunta() {
+            if(index >= juegoActual.length) { finDelJuego(); return; }
+            bloqueado = false;
+            let q = juegoActual[index];
+            
+            document.getElementById('level-title').innerText = "Nivel: " + q.n;
+            document.getElementById('q-counter').innerText = `${index + 1} / ${juegoActual.length}`;
+            document.getElementById('score-counter').innerText = `${score} pts`;
+            document.getElementById('progress-bar').style.width = ((index / juegoActual.length) * 100) + "%";
+
+            // Determinar color del badge
+            let badgeClass = q.n === "Junior" ? "badge-junior" : (q.n === "Semi" ? "badge-semi" : "badge-senior");
+
+            let html = `
+                <span class="level-badge ${badgeClass}">${q.n}</span>
+                <div class="question-text">${q.p}</div>
+                <div class="options-grid" style="width: 100%;">
+            `;
+            q.op.forEach((opcion, i) => {
+                html += `<button class="btn-option" onclick="validar(${i}, this)">${opcion}</button>`;
+            });
+            html += `</div>`;
+            document.getElementById('question-container').innerHTML = html;
+        }
+
+        function validar(iSeleccionado, btn) {
+            if(bloqueado) return; bloqueado = true;
+            let q = juegoActual[index];
+            let botones = document.querySelectorAll('.btn-option');
+            if(iSeleccionado === q.c) {
+                btn.classList.add('correct'); score += 10;
+            } else {
+                btn.classList.add('wrong'); botones[q.c].classList.add('correct');
+            }
+            document.getElementById('score-counter').innerText = `${score} pts`;
+            setTimeout(() => { index++; renderPregunta(); }, 1200);
+        }
+
+        function finDelJuego() {
+            mostrarPantalla('save-screen');
+            document.getElementById('final-score-display').innerText = score;
+        }
+
+        function guardarPuntaje() {
+            let nombre = document.getElementById('player-name').value.trim().substring(0, 12);
+            if(!nombre) nombre = "Anónimo";
+            let historial = JSON.parse(localStorage.getItem('ingenieria_scores_v4')) || [];
+            historial.push({ nombre: nombre, puntos: score, fecha: new Date().toLocaleDateString() });
+            historial.sort((a, b) => b.puntos - a.puntos);
+            historial = historial.slice(0, 5);
+            localStorage.setItem('ingenieria_scores_v4', JSON.stringify(historial));
+            verRanking();
+        }
+
+        function verRanking() {
+            mostrarPantalla('leaderboard-screen');
+            let historial = JSON.parse(localStorage.getItem('ingenieria_scores_v4')) || [];
+            let tbody = document.getElementById('leaderboard-body');
+            tbody.innerHTML = "";
+            if(historial.length === 0) { tbody.innerHTML = "<tr><td colspan='3' style='text-align:center; padding: 20px;'>Aún no hay registros</td></tr>"; return; }
+            historial.forEach((item, i) => {
+                let medal = i===0 ? "🥇" : (i===1 ? "🥈" : (i===2 ? "🥉" : (i+1)));
+                tbody.innerHTML += `<tr><td class="rank">${medal}</td><td>${item.nombre}</td><td class="score-val">${item.puntos}</td></tr>`;
+            });
+        }
+
+        function mostrarPantalla(id) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if(id === 'game-screen') document.getElementById(id).style.display = 'flex';
+            else document.getElementById('game-screen').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
